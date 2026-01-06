@@ -91,5 +91,14 @@ int main() {
         cuMemRelease(handle);
         exit(0);
     }
+
+    cudaGetDeviceCount(&deviceCount);
+    CUmemAccessDesc accessDesc[deviceCount];
+    for (int idx = 0; idx < deviceCount; ++idx) {
+        accessDesc[idx].location.type = CU_MEM_LOCATION_TYPE_DEVICE;
+        accessDesc[idx].location.id = idx;
+        accessDesc[idx].flags = CU_MEM_ACCESS_FLAGS_PROT_READWRITE;
+    }
+    result = cuMemSetAccess((CUdeviceptr)ptr, size, accessDesc, deviceCount);
     
 }
